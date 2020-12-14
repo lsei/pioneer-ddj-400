@@ -1,4 +1,4 @@
-export const channels = {
+const channels = {
     LEFT_MAIN: 0,
     LEFT_PADS: 7,
 
@@ -6,7 +6,7 @@ export const channels = {
     RIGHT_PADS: 9,
 };
 
-export const left = {
+const left = {
     PLAY_PAUSE: [channels.LEFT_MAIN, 11],
     CUE: [channels.LEFT_MAIN, 12],
     SHIFT: [channels.LEFT_MAIN, 63],
@@ -37,7 +37,7 @@ export const left = {
     SAMPLER_PAD_1_3: [channels.LEFT_PADS, 55],
 };
 
-export const HI_RES_CONTROLS = {
+const HI_RES_CONTROLS = {
     "6_63": {
         name: "fader",
         major: "6_31",
@@ -63,4 +63,10 @@ export const HI_RES_CONTROLS = {
         major: "6_24",
         minor: "6_56",
     },
+};
+
+module.exports = {
+    channels,
+    left,
+    HI_RES_CONTROLS,
 };

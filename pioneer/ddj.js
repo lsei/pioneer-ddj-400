@@ -1,5 +1,5 @@
-import easymidi from "easymidi";
-import { left, HI_RES_CONTROLS } from "./midimap.js";
+const easymidi = require("easymidi");
+const { left, HI_RES_CONTROLS } = require("./midimap.js");
 
 class DDJ {
     defaultOptions = {
@@ -90,7 +90,7 @@ class DDJ {
     }
 }
 
-export default DDJ;
+module.exports = DDJ;
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);

@@ -6,7 +6,6 @@
   "scripts": {
     "listen": "node index.js"
   },
-  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
