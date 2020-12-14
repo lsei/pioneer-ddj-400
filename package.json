@@ -1,0 +1,15 @@
+{
+  "name": "pioneer-midi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "listen": "node index.js"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "easymidi": "^2.0.1"
+  }
+}
