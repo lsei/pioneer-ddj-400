@@ -39,37 +39,43 @@ const left = {
 
 const HI_RES_CONTROLS = {
     '6_63': {
-        name: 'fader',
+        type: 'fader',
         major: '6_31',
         minor: '6_63',
     },
     '0_51': {
-        name: 'leftvolume',
+        type: 'volume',
+        side: 'left',
         major: '0_19',
         minor: '0_51',
     },
     '1_51': {
-        name: 'rightvolume',
+        type: 'volume',
+        side: 'right',
         major: '1_19',
         minor: '1_51',
     },
     '6_55': {
-        name: 'leftfilter',
+        type: 'filter',
+        side: 'left',
         major: '6_23',
         minor: '6_55',
     },
     '6_56': {
-        name: 'rightfilter',
+        type: 'filter',
+        side: 'right',
         major: '6_24',
         minor: '6_56',
     },
     '0_32': {
-        name: 'lefttempo',
+        type: 'tempo',
+        side: 'left',
         major: '0_0',
         minor: '0_32',
     },
     '1_32': {
-        name: 'righttempo',
+        type: 'tempo',
+        side: 'right',
         major: '1_0',
         minor: '1_32',
     },

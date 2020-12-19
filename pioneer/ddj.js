@@ -1,45 +1,54 @@
-const easymidi = require('easymidi');
-const { left, HI_RES_CONTROLS, BUTTON_MAP } = require('./midimap.js');
-
-class DDJ {
-    defaultOptions = {
-        padRows: 2,
-        padCols: 4,
-        intialPadMode: 'HOT_CUE',
-        logOutgoingCommands: false,
-        logIncomingCommands: false, // TODO: implement
-
-        syncValuesFromController: 'post-listener-setup', // TODO: enum (pre, none)
-
-        onFaderChange: (level) => {},
-        onLeftvolumeChange: (level) => {},
-        onRightvolumeChange: (level) => {},
-        onLeftfilterChange: (level) => {},
-        onRightfilterChange: (level) => {},
-        onPlayLeft: (isPlaying) => {},
-
-        onPad: ({ row, col, type, side, value }) => {},
-
-        onLefttempo: (tempo) => {},
-        onRighttempo: (tempo) => {},
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
     };
-
-    constructor(name = 'DDJ-400', options = {}) {
-        this.options = {
-            ...this.defaultOptions,
-            ...options,
-        };
-
-        this.input = new easymidi.Input(name);
-        this.output = new easymidi.Output(name);
-
-        this.startListening();
-        if (this.options.syncValuesFromController == 'post-listener-setup') {
-            setTimeout(() => this._triggerSyncValues(), 100);
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
         }
-
-        this.state = {
-            padMode: this.options.intialPadMode,
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var easymidi = require('easymidi');
+var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, BUTTON_MAP = _a.BUTTON_MAP;
+var events_1 = require("events");
+var DDJ = /** @class */ (function (_super) {
+    __extends(DDJ, _super);
+    function DDJ(name, options) {
+        if (name === void 0) { name = 'DDJ-400'; }
+        if (options === void 0) { options = {}; }
+        var _this = _super.call(this) || this;
+        _this.defaultOptions = {
+            intialPadMode: 'HOT_CUE',
+            logOutgoingCommands: false,
+            logIncomingCommands: false,
+            syncValuesFromController: 'post-listener-setup',
+            normaliseValues: true,
+        };
+        _this.options = __assign(__assign({}, _this.defaultOptions), options);
+        _this.input = new easymidi.Input(name);
+        _this.output = new easymidi.Output(name);
+        _this.startListening();
+        if (_this.options.syncValuesFromController == 'post-listener-setup') {
+            setTimeout(function () { return _this._triggerSyncValues(); }, 100);
+        }
+        _this.state = {
+            padMode: _this.options.intialPadMode,
             leftPlaying: false,
             controls: {
                 fader: new HighResValue(63, 0),
@@ -51,98 +60,97 @@ class DDJ {
                 righttempo: new HighResValue(63, 0),
             },
         };
+        return _this;
     }
-
-    startListening() {
-        this.input.on('noteon', (msg) => {
+    DDJ.prototype.startListening = function () {
+        var _this = this;
+        this.input.on('noteon', function (msg) {
             console.log(msg);
-            const key = `${msg.channel}_${msg.note}`;
-
-            const button = BUTTON_MAP[key];
-            if (button && button.type == 'pad') {
+            var key = msg.channel + "_" + msg.note;
+            var button = BUTTON_MAP[key];
+            if (!button)
+                return;
+            if (button.type == 'pad') {
                 button.value = msg.velocity == 127;
-                this.options.onPad(button);
-            }
-            if (msg.channel == 0 && msg.note == 11 && msg.velocity == 127) {
-                this.state.leftPlaying = !this.state.leftPlaying;
-                this.options.onPlayLeft(this.state.leftPlaying);
-                this.playLeft(this.state.leftPlaying);
+                var data = {
+                    row: button.row,
+                    col: button.col,
+                    mode: button.category,
+                    side: button.side,
+                    value: button.value,
+                };
+                _this.emit('pad', data);
             }
         });
-
-        let lastCC = {};
-
-        this.input.on('cc', (msg) => {
-            const key = `${msg.channel}_${msg.controller}`;
+        var lastCC = {};
+        this.input.on('cc', function (msg) {
+            var key = msg.channel + "_" + msg.controller;
             console.log(key);
-            const control = HI_RES_CONTROLS[key];
-            if (control) {
-                const majorValue = lastCC[control.major];
-                this.state.controls[control.name].set(majorValue, msg.value);
-                this.options[`on${capitalizeFirstLetter(control.name)}Change`](this.state.controls[control.name]);
-            }
+            var control = HI_RES_CONTROLS[key];
+            if (!control)
+                return;
+            var majorValue = lastCC[control.major];
+            _this.state.controls[control.name].set(majorValue, msg.value);
+            // TODO: if this.options.normaliseValues == false
+            var normalisedValue = (majorValue + msg.value / 127) / 127;
+            var data = {
+                type: control.type,
+                side: control.side,
+                value: normalisedValue,
+            };
+            _this.emit(control.type, data);
             lastCC[key] = msg.value;
         });
-    }
-
-    playLeft(on = true) {
+    };
+    DDJ.prototype.playLeft = function (on) {
+        if (on === void 0) { on = true; }
         this._triggerButton(left.PLAY_PAUSE, on);
-    }
-
-    padModeHotCue() {
+    };
+    DDJ.prototype.padModeHotCue = function () {
         this._setPadMode('HOT_CUE');
-    }
-
-    pad(row, col, on = true) {
-        const key = `${this.state.padMode}_PAD_${row}_${col}`;
+    };
+    DDJ.prototype.setPadLeft = function (row, col, on) {
+        if (on === void 0) { on = true; }
+        var key = this.state.padMode + "_PAD_" + row + "_" + col;
         this._triggerButton(left[key], on);
-    }
-
+    };
     // HOT_CUE, BEAT_LOOP, BEAT_JUMP, SAMPLER
-    _setPadMode(mode) {
+    DDJ.prototype._setPadMode = function (mode) {
         this.state.padMode = mode;
         this._triggerButton(left[mode], true);
-    }
-
-    _triggerButton([channel, note], on) {
+    };
+    DDJ.prototype._triggerButton = function (_a, on) {
+        var channel = _a[0], note = _a[1];
         this._send('noteon', {
-            channel,
-            note,
+            channel: channel,
+            note: note,
             velocity: on ? 127 : 0,
         });
-    }
-
-    _send(event, params) {
+    };
+    DDJ.prototype._send = function (event, params) {
         this.output.send(event, params);
-    }
-
+    };
     // Tells the controller to publish all current values via midi
-    _triggerSyncValues() {
+    DDJ.prototype._triggerSyncValues = function () {
         this.output.send('sysex', [0xf0, 0x00, 0x40, 0x05, 0x00, 0x00, 0x02, 0x06, 0x00, 0x03, 0x01, 0xf7]);
-    }
-}
-
+    };
+    return DDJ;
+}(events_1.EventEmitter));
 module.exports = DDJ;
-
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-class HighResValue {
-    constructor(major, minor) {
-        this.set(major, minor);
-    }
-
-    toFloat() {
-        return this.major + this.minor / 127;
-    }
-
-    toString() {
-        return (this.major + this.minor / 127).toString();
-    }
-
-    set(major, minor) {
+var HighResValue = /** @class */ (function () {
+    function HighResValue(major, minor) {
         this.major = major;
         this.minor = minor;
     }
-}
+    HighResValue.prototype.toFloat = function () {
+        return this.major + this.minor / 127;
+    };
+    HighResValue.prototype.toString = function () {
+        return (this.major + this.minor / 127).toString();
+    };
+    HighResValue.prototype.set = function (major, minor) {
+        this.major = major;
+        this.minor = minor;
+    };
+    return HighResValue;
+}());
