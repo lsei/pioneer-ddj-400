@@ -38,30 +38,99 @@ const left = {
 };
 
 const HI_RES_CONTROLS = {
-    "6_63": {
-        name: "fader",
-        major: "6_31",
-        minor: "6_63",
+    '6_63': {
+        name: 'fader',
+        major: '6_31',
+        minor: '6_63',
     },
-    "0_51": {
-        name: "leftvolume",
-        major: "0_19",
-        minor: "0_51",
+    '0_51': {
+        name: 'leftvolume',
+        major: '0_19',
+        minor: '0_51',
     },
-    "1_51": {
-        name: "rightvolume",
-        major: "1_19",
-        minor: "1_51",
+    '1_51': {
+        name: 'rightvolume',
+        major: '1_19',
+        minor: '1_51',
     },
-    "6_55": {
-        name: "leftfilter",
-        major: "6_23",
-        minor: "6_55",
+    '6_55': {
+        name: 'leftfilter',
+        major: '6_23',
+        minor: '6_55',
     },
-    "6_56": {
-        name: "rightfilter",
-        major: "6_24",
-        minor: "6_56",
+    '6_56': {
+        name: 'rightfilter',
+        major: '6_24',
+        minor: '6_56',
+    },
+    '0_32': {
+        name: 'lefttempo',
+        major: '0_0',
+        minor: '0_32',
+    },
+    '1_32': {
+        name: 'righttempo',
+        major: '1_0',
+        minor: '1_32',
+    },
+};
+
+const BUTTON_MAP = {
+    '7_0': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 0,
+        col: 0,
+        side: 'left',
+    },
+    '7_1': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 0,
+        col: 1,
+        side: 'left',
+    },
+    '7_2': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 0,
+        col: 2,
+        side: 'left',
+    },
+    '7_3': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 0,
+        col: 3,
+        side: 'left',
+    },
+    '7_4': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 1,
+        col: 0,
+        side: 'left',
+    },
+    '7_5': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 1,
+        col: 1,
+        side: 'left',
+    },
+    '7_6': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 1,
+        col: 2,
+        side: 'left',
+    },
+    '7_7': {
+        type: 'pad',
+        category: 'HOT_CUE',
+        row: 1,
+        col: 3,
+        side: 'left',
     },
 };
 
@@ -69,4 +138,5 @@ module.exports = {
     channels,
     left,
     HI_RES_CONTROLS,
+    BUTTON_MAP,
 };
