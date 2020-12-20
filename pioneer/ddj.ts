@@ -1,10 +1,10 @@
 const easymidi = require('easymidi');
-const { left, HI_RES_CONTROLS, BUTTON_MAP } = require('./midimap.js');
+const { left, HI_RES_CONTROLS, BUTTON_MAP, JOGDIALS } = require('./midimap.js');
 
 import * as em from 'easymidi';
 import { EventEmitter } from 'events';
 
-import { ButtonEvent, ButtonType, DDJOptions, EncoderEvent, PadEvent, Side } from './ddj.d';
+import { ButtonEvent, ButtonType, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '../index.d';
 
 class DDJ extends EventEmitter {
     input: em.Input;
@@ -88,30 +88,45 @@ class DDJ extends EventEmitter {
             lastCC[key] = msg.value;
             console.log(key);
             const control = HI_RES_CONTROLS[key];
-            if (!control) return;
+            if (control) {
+                const majorValue = lastCC[control.major];
+                const controlKey = `${control.side || ''}${control.type}`;
+                if (!this.state.controls[controlKey]) {
+                    console.log(`Key '${controlKey}' not found in 'this.state.controls'`);
+                }
+                this.state.controls[controlKey].set(majorValue, msg.value);
 
-            const majorValue = lastCC[control.major];
-            const controlKey = `${control.side || ''}${control.type}`;
-            if (!this.state.controls[controlKey]) {
-                console.log(controlKey);
+                // TODO: if this.options.normaliseValues == false
+                let normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
+                console.log(majorValue, msg.value, normalisedValue, lastCC);
+
+                let data: EncoderEvent = {
+                    type: control.type,
+                    side: control.side,
+                    value: normalisedValue,
+                };
+
+                this.emit(control.type, data);
             }
-            this.state.controls[controlKey].set(majorValue, msg.value);
 
-            // TODO: if this.options.normaliseValues == false
-            let normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
-            console.log(majorValue, msg.value, normalisedValue, lastCC);
+            const wheel = JOGDIALS[key];
+            if (wheel) {
+                let data: JogdialEvent = {
+                    position: wheel.position,
+                    shift: wheel.shift,
+                    side: wheel.side,
+                    vinyl_mode: wheel.vinyl_mode,
+                    value: msg.value - 64, // "normalised to +/-3 from 0"
+                };
 
-            let data: EncoderEvent = {
-                type: control.type,
-                side: control.side,
-                value: normalisedValue,
-            };
+                console.log(data);
 
-            this.emit(control.type, data);
+                this.emit(wheel.type, data);
+            }
         });
     }
 
-    playLeft(on = true) {
+    setPlayLeft(on = true) {
         this._triggerButton(left.PLAY_PAUSE, on);
     }
 

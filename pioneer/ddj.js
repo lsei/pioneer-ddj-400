@@ -25,7 +25,7 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var easymidi = require('easymidi');
-var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, BUTTON_MAP = _a.BUTTON_MAP;
+var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, BUTTON_MAP = _a.BUTTON_MAP, JOGDIALS = _a.JOGDIALS;
 var events_1 = require("events");
 var DDJ = /** @class */ (function (_super) {
     __extends(DDJ, _super);
@@ -97,26 +97,38 @@ var DDJ = /** @class */ (function (_super) {
             lastCC[key] = msg.value;
             console.log(key);
             var control = HI_RES_CONTROLS[key];
-            if (!control)
-                return;
-            var majorValue = lastCC[control.major];
-            var controlKey = "" + (control.side || '') + control.type;
-            if (!_this.state.controls[controlKey]) {
-                console.log(controlKey);
+            if (control) {
+                var majorValue = lastCC[control.major];
+                var controlKey = "" + (control.side || '') + control.type;
+                if (!_this.state.controls[controlKey]) {
+                    console.log("Key '" + controlKey + "' not found in 'this.state.controls'");
+                }
+                _this.state.controls[controlKey].set(majorValue, msg.value);
+                // TODO: if this.options.normaliseValues == false
+                var normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
+                console.log(majorValue, msg.value, normalisedValue, lastCC);
+                var data = {
+                    type: control.type,
+                    side: control.side,
+                    value: normalisedValue,
+                };
+                _this.emit(control.type, data);
             }
-            _this.state.controls[controlKey].set(majorValue, msg.value);
-            // TODO: if this.options.normaliseValues == false
-            var normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
-            console.log(majorValue, msg.value, normalisedValue, lastCC);
-            var data = {
-                type: control.type,
-                side: control.side,
-                value: normalisedValue,
-            };
-            _this.emit(control.type, data);
+            var wheel = JOGDIALS[key];
+            if (wheel) {
+                var data = {
+                    position: wheel.position,
+                    shift: wheel.shift,
+                    side: wheel.side,
+                    vinyl_mode: wheel.vinyl_mode,
+                    value: msg.value - 64,
+                };
+                console.log(data);
+                _this.emit(wheel.type, data);
+            }
         });
     };
-    DDJ.prototype.playLeft = function (on) {
+    DDJ.prototype.setPlayLeft = function (on) {
         if (on === void 0) { on = true; }
         this._triggerButton(left.PLAY_PAUSE, on);
     };

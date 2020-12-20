@@ -37,6 +37,58 @@ const left = {
     SAMPLER_PAD_1_3: [channels.LEFT_PADS, 55],
 };
 
+const JOGDIALS = {
+    // left side
+    '0_34': {
+        type: 'jogdial',
+        side: 'left',
+        vinyl_mode: 'on',
+        position: 'platter',
+    },
+    '0_35': {
+        type: 'jogdial',
+        side: 'left',
+        vinyl_mode: 'off',
+        position: 'platter',
+    },
+    '0_41': {
+        type: 'jogdial',
+        side: 'left',
+        position: 'platter',
+        shift: true,
+    },
+    '0_33': {
+        type: 'jogdial',
+        side: 'left',
+        position: 'wheel',
+    },
+
+    // Right side
+    '1_34': {
+        type: 'jogdial',
+        side: 'right',
+        vinyl_mode: 'on',
+        position: 'platter',
+    },
+    '1_35': {
+        type: 'jogdial',
+        side: 'right',
+        vinyl_mode: 'off',
+        position: 'platter',
+    },
+    '1_41': {
+        type: 'jogdial',
+        side: 'left',
+        position: 'platter',
+        shift: true,
+    },
+    '1_33': {
+        type: 'jogdial',
+        side: 'right',
+        position: 'wheel',
+    },
+};
+
 const HI_RES_CONTROLS = {
     '6_63': {
         type: 'crossfader',
@@ -85,6 +137,14 @@ const BUTTON_MAP = {
     '0_11': {
         type: 'play',
         side: 'left',
+    },
+    '0_54': {
+        type: 'platter',
+        side: 'left',
+    },
+    '1_54': {
+        type: 'platter',
+        side: 'right',
     },
     '7_0': {
         type: 'pad',
@@ -149,4 +209,5 @@ module.exports = {
     left,
     HI_RES_CONTROLS,
     BUTTON_MAP,
+    JOGDIALS,
 };
