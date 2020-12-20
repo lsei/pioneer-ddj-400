@@ -52,9 +52,7 @@ class DDJ extends EventEmitter {
 
     startListening() {
         this.input.on('noteon', (msg) => {
-            console.log(msg);
             const key = `${msg.channel}_${msg.note}`;
-
             const button = BUTTON_MAP[key];
             if (!button) return;
 
@@ -86,7 +84,7 @@ class DDJ extends EventEmitter {
         this.input.on('cc', (msg) => {
             const key = `${msg.channel}_${msg.controller}`;
             lastCC[key] = msg.value;
-            console.log(key);
+
             const control = HI_RES_CONTROLS[key];
             if (control) {
                 const majorValue = lastCC[control.major];
@@ -98,7 +96,6 @@ class DDJ extends EventEmitter {
 
                 // TODO: if this.options.normaliseValues == false
                 let normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
-                console.log(majorValue, msg.value, normalisedValue, lastCC);
 
                 let data: EncoderEvent = {
                     type: control.type,
@@ -116,11 +113,10 @@ class DDJ extends EventEmitter {
                     shift: wheel.shift,
                     side: wheel.side,
                     vinyl_mode: wheel.vinyl_mode,
+
+                    // TODO: if this.options.normaliseValues == false
                     value: msg.value - 64, // "normalised to +/-3 from 0"
                 };
-
-                console.log(data);
-
                 this.emit(wheel.type, data);
             }
         });
