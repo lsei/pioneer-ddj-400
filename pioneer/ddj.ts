@@ -4,7 +4,7 @@ const { left, HI_RES_CONTROLS, BUTTON_MAP } = require('./midimap.js');
 import * as em from 'easymidi';
 import { EventEmitter } from 'events';
 
-import { DDJOptions, EncoderEvent, PadEvent, Side } from './ddj.d';
+import { ButtonEvent, ButtonType, DDJOptions, EncoderEvent, PadEvent, Side } from './ddj.d';
 
 class DDJ extends EventEmitter {
     input: em.Input;
@@ -39,7 +39,7 @@ class DDJ extends EventEmitter {
             padMode: this.options.intialPadMode,
             leftPlaying: false,
             controls: {
-                fader: new HighResValue(63, 0),
+                crossfader: new HighResValue(63, 0),
                 leftvolume: new HighResValue(63, 0),
                 rightvolume: new HighResValue(63, 0),
                 leftfilter: new HighResValue(63, 0),
@@ -69,21 +69,37 @@ class DDJ extends EventEmitter {
                 };
                 this.emit('pad', data);
             }
+
+            if (button.type == 'play') {
+                button.value = msg.velocity == 127;
+                let data: ButtonEvent = {
+                    type: 'PLAY',
+                    side: button.side,
+                    state: button.value,
+                };
+                this.emit('play', data);
+            }
         });
 
         let lastCC: any = {};
 
         this.input.on('cc', (msg) => {
             const key = `${msg.channel}_${msg.controller}`;
+            lastCC[key] = msg.value;
             console.log(key);
             const control = HI_RES_CONTROLS[key];
             if (!control) return;
 
             const majorValue = lastCC[control.major];
-            this.state.controls[control.name].set(majorValue, msg.value);
+            const controlKey = `${control.side || ''}${control.type}`;
+            if (!this.state.controls[controlKey]) {
+                console.log(controlKey);
+            }
+            this.state.controls[controlKey].set(majorValue, msg.value);
 
             // TODO: if this.options.normaliseValues == false
-            let normalisedValue = (majorValue + msg.value / 127) / 127;
+            let normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
+            console.log(majorValue, msg.value, normalisedValue, lastCC);
 
             let data: EncoderEvent = {
                 type: control.type,
@@ -92,8 +108,6 @@ class DDJ extends EventEmitter {
             };
 
             this.emit(control.type, data);
-
-            lastCC[key] = msg.value;
         });
     }
 

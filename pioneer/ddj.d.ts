@@ -27,10 +27,7 @@ export interface PadEvent {
     value: number;
 }
 
-export enum ButtonType {
-    Play,
-    Cue,
-}
+export type ButtonType = 'PLAY' | 'CUE';
 
 export interface ButtonEvent {
     type: ButtonType;

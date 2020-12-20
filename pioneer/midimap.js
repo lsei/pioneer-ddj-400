@@ -39,7 +39,7 @@ const left = {
 
 const HI_RES_CONTROLS = {
     '6_63': {
-        type: 'fader',
+        type: 'crossfader',
         major: '6_31',
         minor: '6_63',
     },
@@ -82,6 +82,10 @@ const HI_RES_CONTROLS = {
 };
 
 const BUTTON_MAP = {
+    '0_11': {
+        type: 'play',
+        side: 'left',
+    },
     '7_0': {
         type: 'pad',
         category: 'HOT_CUE',

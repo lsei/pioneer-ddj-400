@@ -51,7 +51,7 @@ var DDJ = /** @class */ (function (_super) {
             padMode: _this.options.intialPadMode,
             leftPlaying: false,
             controls: {
-                fader: new HighResValue(63, 0),
+                crossfader: new HighResValue(63, 0),
                 leftvolume: new HighResValue(63, 0),
                 rightvolume: new HighResValue(63, 0),
                 leftfilter: new HighResValue(63, 0),
@@ -81,25 +81,39 @@ var DDJ = /** @class */ (function (_super) {
                 };
                 _this.emit('pad', data);
             }
+            if (button.type == 'play') {
+                button.value = msg.velocity == 127;
+                var data = {
+                    type: 'PLAY',
+                    side: button.side,
+                    state: button.value,
+                };
+                _this.emit('play', data);
+            }
         });
         var lastCC = {};
         this.input.on('cc', function (msg) {
             var key = msg.channel + "_" + msg.controller;
+            lastCC[key] = msg.value;
             console.log(key);
             var control = HI_RES_CONTROLS[key];
             if (!control)
                 return;
             var majorValue = lastCC[control.major];
-            _this.state.controls[control.name].set(majorValue, msg.value);
+            var controlKey = "" + (control.side || '') + control.type;
+            if (!_this.state.controls[controlKey]) {
+                console.log(controlKey);
+            }
+            _this.state.controls[controlKey].set(majorValue, msg.value);
             // TODO: if this.options.normaliseValues == false
-            var normalisedValue = (majorValue + msg.value / 127) / 127;
+            var normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
+            console.log(majorValue, msg.value, normalisedValue, lastCC);
             var data = {
                 type: control.type,
                 side: control.side,
                 value: normalisedValue,
             };
             _this.emit(control.type, data);
-            lastCC[key] = msg.value;
         });
     };
     DDJ.prototype.playLeft = function (on) {
