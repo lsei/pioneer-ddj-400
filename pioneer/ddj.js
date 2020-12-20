@@ -65,7 +65,6 @@ var DDJ = /** @class */ (function (_super) {
     DDJ.prototype.startListening = function () {
         var _this = this;
         this.input.on('noteon', function (msg) {
-            console.log(msg);
             var key = msg.channel + "_" + msg.note;
             var button = BUTTON_MAP[key];
             if (!button)
@@ -95,7 +94,6 @@ var DDJ = /** @class */ (function (_super) {
         this.input.on('cc', function (msg) {
             var key = msg.channel + "_" + msg.controller;
             lastCC[key] = msg.value;
-            console.log(key);
             var control = HI_RES_CONTROLS[key];
             if (control) {
                 var majorValue = lastCC[control.major];
@@ -106,7 +104,6 @@ var DDJ = /** @class */ (function (_super) {
                 _this.state.controls[controlKey].set(majorValue, msg.value);
                 // TODO: if this.options.normaliseValues == false
                 var normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
-                console.log(majorValue, msg.value, normalisedValue, lastCC);
                 var data = {
                     type: control.type,
                     side: control.side,
@@ -121,9 +118,9 @@ var DDJ = /** @class */ (function (_super) {
                     shift: wheel.shift,
                     side: wheel.side,
                     vinyl_mode: wheel.vinyl_mode,
+                    // TODO: if this.options.normaliseValues == false
                     value: msg.value - 64,
                 };
-                console.log(data);
                 _this.emit(wheel.type, data);
             }
         });
