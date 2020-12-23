@@ -19,7 +19,7 @@ export interface PadEvent {
     col: number;
     mode: PadMode;
     side: Side;
-    value: number;
+    value: boolean;
 }
 
 export type ButtonType = 'PLAY' | 'CUE';
