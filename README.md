@@ -29,4 +29,4 @@ ddj.setPadLeft(1, 1, true);
 
 ## Shout outs
 
-S/O to dinchak and his package (node-easymidi)[https://github.com/dinchak/node-easymidi] which helped make the creation of this package super easy and inspired the EventEmitter style api design.
+S/O to dinchak and his package [node-easymidi](https://github.com/dinchak/node-easymidi) which helped make the creation of this package super easy and inspired the EventEmitter style api design.
