@@ -1,11 +1,15 @@
 import easymidi from 'easymidi';
 import { EventEmitter } from 'events';
 
-const { left, HI_RES_CONTROLS, BUTTON_MAP, JOGDIALS } = require('./midimap.js');
+const { left, HI_RES_CONTROLS, JOGDIALS } = require('./midimap.js');
 
-import { ButtonEvent, ButtonType, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '../index.d';
+import { BUTTON_MAP } from './midimap/index';
 
-class DDJ extends EventEmitter {
+console.log(BUTTON_MAP);
+
+import { ButtonEvent, ButtonType, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '..';
+
+export class DDJ extends EventEmitter {
     input: easymidi.Input;
     output: easymidi.Output;
     options: DDJOptions;
@@ -96,7 +100,7 @@ class DDJ extends EventEmitter {
                 this.state.controls[controlKey].set(majorValue, msg.value);
 
                 // TODO: if this.options.normaliseValues == false
-                let normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
+                let normalisedValue = (majorValue + msg.value / 127) / 128;
 
                 let data: EncoderEvent = {
                     type: control.type,
@@ -165,8 +169,6 @@ class DDJ extends EventEmitter {
     }
 }
 
-module.exports = DDJ;
-
 class HighResValue {
     major: number;
     minor: number;
@@ -189,3 +191,6 @@ class HighResValue {
         this.minor = minor;
     }
 }
+
+const clamp = (a: number, min = 0, max = 1) => Math.min(max, Math.max(min, a));
+const invlerp = (x: number, y: number, a: number) => clamp((a - x) / (y - x));

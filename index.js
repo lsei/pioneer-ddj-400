@@ -1,3 +1,3 @@
-const DDJ = require('./pioneer/ddj.js');
+const DDJ = require('./build/ddj.js');
 
 module.exports = DDJ;

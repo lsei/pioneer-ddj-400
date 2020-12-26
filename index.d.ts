@@ -64,27 +64,44 @@ export interface JogdialEvent {
     vinyl_mode: boolean;
 }
 
+export type EncoderEventTypeName = 'encoder' | 'volume' | 'tempo' | 'filter' | 'crossfader' | 'channel';
+export type ButtonEventTypeName =
+    | 'play'
+    | 'cue'
+    | 'phones_cue'
+    | 'shift'
+    | 'loop_in'
+    | 'loop_out'
+    | 'reloop'
+    | 'call_back'
+    | 'call_forward'
+    | 'load'
+    | 'select'
+    | 'master_value'
+    | 'master_cue'
+    | 'beatfx_back'
+    | 'beatfx_foward'
+    | 'beatfx_select'
+    | 'beatfx_channel'
+    | 'beatfx_level'
+    | 'beatfx_toggle'
+    | 'beatsync'
+    | 'beatsync_long';
+
 export declare class DDJ extends EventEmitter {
     constructor(name: string, options: DDJOptions);
     options: DDJOptions;
 
     on(event: 'pad', handler: (param: PadEvent) => void): this;
-
-    on(event: 'encoder', handler: (param: EncoderEvent) => void): this;
-    on(event: 'volume', handler: (param: EncoderEvent) => void): this;
-    on(event: 'tempo', handler: (param: EncoderEvent) => void): this;
-    on(event: 'filter', handler: (param: EncoderEvent) => void): this;
-    on(event: 'crossfader', handler: (param: EncoderEvent) => void): this;
-
+    on(event: EncoderEventTypeName, handler: (param: EncoderEvent) => void): this;
     on(event: 'jogdial', handler: (param: JogdialEvent) => void): this;
-
-    on(event: 'play', handler: (param: ButtonEvent) => void): this;
+    on(event: ButtonEventTypeName, handler: (param: ButtonEvent) => void): this;
 
     setPlayLeft(state: boolean): void;
     setCueLeft(state: boolean): void;
+    setPadModeLeft(mode: PadMode): void;
     setPadLeft(row: number, col: number, state: boolean): void;
     setPadLeft(row: number, col: number, state: boolean, mode: PadMode): void;
-    setPadModeLeft(mode: PadMode): void;
 
     close(): void;
 }

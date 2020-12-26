@@ -27,9 +27,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DDJ = void 0;
 var easymidi_1 = __importDefault(require("easymidi"));
 var events_1 = require("events");
-var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, BUTTON_MAP = _a.BUTTON_MAP, JOGDIALS = _a.JOGDIALS;
+var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, JOGDIALS = _a.JOGDIALS;
+var index_1 = require("./midimap/index");
+console.log(index_1.BUTTON_MAP);
 var DDJ = /** @class */ (function (_super) {
     __extends(DDJ, _super);
     function DDJ(name, options) {
@@ -69,7 +72,7 @@ var DDJ = /** @class */ (function (_super) {
         var _this = this;
         this.input.on('noteon', function (msg) {
             var key = msg.channel + "_" + msg.note;
-            var button = BUTTON_MAP[key];
+            var button = index_1.BUTTON_MAP[key];
             if (!button)
                 return;
             if (button.type == 'pad') {
@@ -106,7 +109,7 @@ var DDJ = /** @class */ (function (_super) {
                 }
                 _this.state.controls[controlKey].set(majorValue, msg.value);
                 // TODO: if this.options.normaliseValues == false
-                var normalisedValue = Math.min(Math.max((majorValue + msg.value / 127) / 127, 0), 1);
+                var normalisedValue = (majorValue + msg.value / 127) / 128;
                 var data = {
                     type: control.type,
                     side: control.side,
@@ -166,7 +169,7 @@ var DDJ = /** @class */ (function (_super) {
     };
     return DDJ;
 }(events_1.EventEmitter));
-module.exports = DDJ;
+exports.DDJ = DDJ;
 var HighResValue = /** @class */ (function () {
     function HighResValue(major, minor) {
         this.major = major;
@@ -184,3 +187,9 @@ var HighResValue = /** @class */ (function () {
     };
     return HighResValue;
 }());
+var clamp = function (a, min, max) {
+    if (min === void 0) { min = 0; }
+    if (max === void 0) { max = 1; }
+    return Math.min(max, Math.max(min, a));
+};
+var invlerp = function (x, y, a) { return clamp((a - x) / (y - x)); };

@@ -27,6 +27,10 @@ ddj.setPadModeLeft('BEAT_LOOP');
 ddj.setPadLeft(1, 1, true);
 ```
 
+# Values:
+
+-   Midi values typically range between 0 and 127. In order to increase the precision Pioneer send two values every time a dial is changes. I've interpreted this as a major and minor value and added them together to result in a value between 0 and 128 that I map to [0,1]. I'm not sure if this is correct and if it will correctly show the middle value at 0.5.
+
 # Open TODOs
 
 -   [] Make sure all functions are available on the left and the right side
