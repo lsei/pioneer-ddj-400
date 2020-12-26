@@ -7,7 +7,7 @@ import { BUTTON_MAP } from './midimap/index';
 
 console.log(BUTTON_MAP);
 
-import { ButtonEvent, ButtonType, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '..';
+import { ButtonEvent, ButtonEventTypeName, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '..';
 
 export class DDJ extends EventEmitter {
     input: easymidi.Input;
@@ -23,7 +23,7 @@ export class DDJ extends EventEmitter {
         normaliseValues: true,
     };
 
-    constructor(name = 'DDJ-400', options: DDJOptions) {
+    constructor(name = 'DDJ-400', options: DDJOptions = {}) {
         super();
         this.options = {
             ...this.defaultOptions,
@@ -71,17 +71,16 @@ export class DDJ extends EventEmitter {
                     value: button.value,
                 };
                 this.emit('pad', data);
+                return;
             }
 
-            if (button.type == 'play') {
-                button.value = msg.velocity == 127;
-                let data: ButtonEvent = {
-                    type: 'PLAY',
-                    side: button.side,
-                    state: button.value,
-                };
-                this.emit('play', data);
-            }
+            button.value = msg.velocity == 127;
+            let data: ButtonEvent = {
+                type: button.type,
+                side: button.side,
+                state: button.value,
+            };
+            this.emit(button.type, data);
         });
 
         let lastCC: any = {};

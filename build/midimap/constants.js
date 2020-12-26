@@ -26,54 +26,54 @@ exports.PadModes = [
 exports.Buttons = [
     {
         type: 'play',
-        note: '11',
+        note: 11,
     },
     {
         type: 'cue',
-        note: '12',
+        note: 12,
     },
     {
         type: 'shift',
-        note: '63',
+        note: 63,
     },
     {
         type: 'platter',
-        note: '54',
+        note: 54,
     },
     {
         type: 'beatsync',
-        note: '88',
+        note: 88,
     },
     {
         type: 'beatsync_long',
-        note: '92',
+        note: 92,
     },
     {
         type: 'loop_in',
-        note: '16',
+        note: 16,
     },
     {
         type: 'loop_in_long',
-        note: '20',
+        note: 20,
     },
     {
         type: 'loop_out',
-        note: '17',
+        note: 17,
     },
     {
         type: 'reloop',
-        note: '77',
+        note: 77,
     },
     {
         type: 'call_back',
-        note: '81',
+        note: 81,
     },
     {
         type: 'call_forward',
-        note: '83',
+        note: 83,
     },
     {
         type: 'phones_cue',
-        note: '84',
+        note: 84,
     },
 ];

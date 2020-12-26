@@ -37,6 +37,7 @@ var DDJ = /** @class */ (function (_super) {
     __extends(DDJ, _super);
     function DDJ(name, options) {
         if (name === void 0) { name = 'DDJ-400'; }
+        if (options === void 0) { options = {}; }
         var _this = _super.call(this) || this;
         _this.defaultOptions = {
             intialPadMode: 'HOT_CUE',
@@ -77,24 +78,23 @@ var DDJ = /** @class */ (function (_super) {
                 return;
             if (button.type == 'pad') {
                 button.value = msg.velocity == 127;
-                var data = {
+                var data_1 = {
                     row: button.row,
                     col: button.col,
                     mode: button.category,
                     side: button.side,
                     value: button.value,
                 };
-                _this.emit('pad', data);
+                _this.emit('pad', data_1);
+                return;
             }
-            if (button.type == 'play') {
-                button.value = msg.velocity == 127;
-                var data = {
-                    type: 'PLAY',
-                    side: button.side,
-                    state: button.value,
-                };
-                _this.emit('play', data);
-            }
+            button.value = msg.velocity == 127;
+            var data = {
+                type: button.type,
+                side: button.side,
+                state: button.value,
+            };
+            _this.emit(button.type, data);
         });
         var lastCC = {};
         this.input.on('cc', function (msg) {
