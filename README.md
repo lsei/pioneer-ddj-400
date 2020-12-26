@@ -27,6 +27,16 @@ ddj.setPadModeLeft('BEAT_LOOP');
 ddj.setPadLeft(1, 1, true);
 ```
 
+# Open TODOs
+
+-   [] Make sure all functions are available on the left and the right side
+-   [] Strealine setting of values
+-   [] Store board state in class to get the current value
+-   [] Move to src
+-   [] output to dist
+-   [] browser version
+-   [] More gracefully handle if board is not connected
+
 ## Shout outs
 
 S/O to dinchak and his package [node-easymidi](https://github.com/dinchak/node-easymidi) which helped make the creation of this package super easy and inspired the EventEmitter style api design.
