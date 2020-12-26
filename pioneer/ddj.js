@@ -23,15 +23,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var easymidi = require('easymidi');
-var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, BUTTON_MAP = _a.BUTTON_MAP, JOGDIALS = _a.JOGDIALS;
+var easymidi_1 = __importDefault(require("easymidi"));
 var events_1 = require("events");
+var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, BUTTON_MAP = _a.BUTTON_MAP, JOGDIALS = _a.JOGDIALS;
 var DDJ = /** @class */ (function (_super) {
     __extends(DDJ, _super);
     function DDJ(name, options) {
         if (name === void 0) { name = 'DDJ-400'; }
-        if (options === void 0) { options = {}; }
         var _this = _super.call(this) || this;
         _this.defaultOptions = {
             intialPadMode: 'HOT_CUE',
@@ -41,8 +43,9 @@ var DDJ = /** @class */ (function (_super) {
             normaliseValues: true,
         };
         _this.options = __assign(__assign({}, _this.defaultOptions), options);
-        _this.input = new easymidi.Input(name);
-        _this.output = new easymidi.Output(name);
+        _this.input = options.midiInput || new easymidi_1.default.Input(name);
+        _this.output = options.midiOutput || new easymidi_1.default.Output(name);
+        // this.output = options.midiOutput || new easymidi.Output(name);
         _this.startListening();
         if (_this.options.syncValuesFromController == 'post-listener-setup') {
             setTimeout(function () { return _this._triggerSyncValues(); }, 100);
@@ -156,6 +159,10 @@ var DDJ = /** @class */ (function (_super) {
     // Tells the controller to publish all current values via midi
     DDJ.prototype._triggerSyncValues = function () {
         this.output.send('sysex', [0xf0, 0x00, 0x40, 0x05, 0x00, 0x00, 0x02, 0x06, 0x00, 0x03, 0x01, 0xf7]);
+    };
+    DDJ.prototype.close = function () {
+        this.input.close();
+        this.output.close();
     };
     return DDJ;
 }(events_1.EventEmitter));

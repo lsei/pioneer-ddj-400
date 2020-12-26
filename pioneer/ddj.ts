@@ -1,14 +1,13 @@
-const easymidi = require('easymidi');
-const { left, HI_RES_CONTROLS, BUTTON_MAP, JOGDIALS } = require('./midimap.js');
-
-import * as em from 'easymidi';
+import easymidi from 'easymidi';
 import { EventEmitter } from 'events';
+
+const { left, HI_RES_CONTROLS, BUTTON_MAP, JOGDIALS } = require('./midimap.js');
 
 import { ButtonEvent, ButtonType, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '../index.d';
 
 class DDJ extends EventEmitter {
-    input: em.Input;
-    output: em.Output;
+    input: easymidi.Input;
+    output: easymidi.Output;
     options: DDJOptions;
     state: any;
 
@@ -20,15 +19,17 @@ class DDJ extends EventEmitter {
         normaliseValues: true,
     };
 
-    constructor(name = 'DDJ-400', options = {}) {
+    constructor(name = 'DDJ-400', options: DDJOptions) {
         super();
         this.options = {
             ...this.defaultOptions,
             ...options,
         };
 
-        this.input = new easymidi.Input(name);
-        this.output = new easymidi.Output(name);
+        this.input = options.midiInput || new easymidi.Input(name);
+        this.output = options.midiOutput || new easymidi.Output(name);
+
+        // this.output = options.midiOutput || new easymidi.Output(name);
 
         this.startListening();
         if (this.options.syncValuesFromController == 'post-listener-setup') {
@@ -143,19 +144,24 @@ class DDJ extends EventEmitter {
 
     _triggerButton([channel, note]: [number, number], on: boolean) {
         this._send('noteon', {
-            channel: channel as em.Channel,
+            channel: channel as easymidi.Channel,
             note,
             velocity: on ? 127 : 0,
         });
     }
 
-    _send(event: 'noteon', params: { channel: em.Channel; note: number; velocity: number }) {
+    _send(event: 'noteon', params: { channel: easymidi.Channel; note: number; velocity: number }) {
         this.output.send(event, params);
     }
 
     // Tells the controller to publish all current values via midi
     _triggerSyncValues() {
         this.output.send('sysex', [0xf0, 0x00, 0x40, 0x05, 0x00, 0x00, 0x02, 0x06, 0x00, 0x03, 0x01, 0xf7]);
+    }
+
+    close() {
+        this.input.close();
+        this.output.close();
     }
 }
 

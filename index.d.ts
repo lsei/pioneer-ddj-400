@@ -1,3 +1,4 @@
+import easymidi from 'easymidi';
 import { EventEmitter } from 'events';
 
 export type PadMode = 'HOT_CUE' | 'BEAT_LOOP' | 'BEAT_JUMP' | 'SAMPLER';
@@ -12,6 +13,8 @@ export interface DDJOptions {
     logIncomingCommands?: boolean;
     syncValuesFromController?: string;
     normaliseValues?: boolean;
+    midiInput?: easymidi.Input;
+    midiOutput?: easymidi.Output;
 }
 
 export interface PadEvent {
@@ -82,6 +85,8 @@ export declare class DDJ extends EventEmitter {
     setPadLeft(row: number, col: number, state: boolean): void;
     setPadLeft(row: number, col: number, state: boolean, mode: PadMode): void;
     setPadModeLeft(mode: PadMode): void;
+
+    close(): void;
 }
 
 export declare var DDJ: {
