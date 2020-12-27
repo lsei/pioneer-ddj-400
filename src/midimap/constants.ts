@@ -76,4 +76,53 @@ export const Buttons = [
         type: 'phones_cue',
         note: 84,
     },
+    {
+        type: 'hot_cue',
+        note: 27,
+    },
+    {
+        type: 'beat_loop',
+        note: 109,
+    },
+    {
+        type: 'beat_jump',
+        note: 32,
+    },
+    {
+        type: 'sampler',
+        note: 34,
+    },
+];
+
+export const Knobs = [
+    {
+        type: 'trim',
+        majorNote: 4,
+        minorNote: 36,
+    },
+    {
+        type: 'eq_high',
+        majorNote: 7,
+        minorNote: 39,
+    },
+    {
+        type: 'eq_mid',
+        majorNote: 11,
+        minorNote: 43,
+    },
+    {
+        type: 'eq_low',
+        majorNote: 15,
+        minorNote: 47,
+    },
+    {
+        type: 'level',
+        majorNote: 19,
+        minorNote: 51,
+    },
+    {
+        type: 'tempo',
+        majorNote: 0,
+        minorNote: 32,
+    },
 ];

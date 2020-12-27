@@ -1,11 +1,9 @@
 import easymidi from 'easymidi';
 import { EventEmitter } from 'events';
 
-const { left, HI_RES_CONTROLS, JOGDIALS } = require('./midimap.js');
+const { left, JOGDIALS } = require('./midimap.js');
 
-import { BUTTON_MAP } from './midimap/index';
-
-console.log(BUTTON_MAP);
+import { BUTTON_MAP, KNOB_MAP } from './midimap/index';
 
 import { ButtonEvent, ButtonEventTypeName, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '..';
 
@@ -51,6 +49,18 @@ export class DDJ extends EventEmitter {
                 rightfilter: new HighResValue(63, 0),
                 lefttempo: new HighResValue(63, 0),
                 righttempo: new HighResValue(63, 0),
+                lefttrim: new HighResValue(63, 0),
+                righttrim: new HighResValue(63, 0),
+                lefteq_high: new HighResValue(63, 0),
+                lefteq_mid: new HighResValue(63, 0),
+                lefteq_low: new HighResValue(63, 0),
+                righteq_high: new HighResValue(63, 0),
+                righteq_mid: new HighResValue(63, 0),
+                righteq_low: new HighResValue(63, 0),
+                leftlevel: new HighResValue(63, 0),
+                rightlevel: new HighResValue(63, 0),
+                beatfx_level: new HighResValue(63, 0),
+                master_level: new HighResValue(63, 0),
             },
         };
     }
@@ -89,14 +99,16 @@ export class DDJ extends EventEmitter {
             const key = `${msg.channel}_${msg.controller}`;
             lastCC[key] = msg.value;
 
-            const control = HI_RES_CONTROLS[key];
+            const control = KNOB_MAP[key];
+
             if (control) {
                 const majorValue = lastCC[control.major];
                 const controlKey = `${control.side || ''}${control.type}`;
-                if (!this.state.controls[controlKey]) {
-                    console.log(`Key '${controlKey}' not found in 'this.state.controls'`);
+                if (this.state.controls[controlKey]) {
+                    this.state.controls[controlKey].set(majorValue, msg.value);
+                } else {
+                    this.state.controls[controlKey] = new HighResValue(majorValue, msg.value);
                 }
-                this.state.controls[controlKey].set(majorValue, msg.value);
 
                 // TODO: if this.options.normaliseValues == false
                 let normalisedValue = (majorValue + msg.value / 127) / 128;

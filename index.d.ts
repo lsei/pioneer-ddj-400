@@ -64,7 +64,20 @@ export interface JogdialEvent {
     vinyl_mode: boolean;
 }
 
-export type EncoderEventTypeName = 'encoder' | 'volume' | 'tempo' | 'filter' | 'crossfader' | 'channel';
+export type EncoderEventTypeName =
+    | 'level'
+    | 'master_level'
+    | 'phones_mixing'
+    | 'phones_level'
+    | 'tempo'
+    | 'filter'
+    | 'crossfader'
+    | 'trim'
+    | 'eq_high'
+    | 'eq_mid'
+    | 'eq_low'
+    | 'beatfx_level';
+
 export type ButtonEventTypeName =
     | 'play'
     | 'cue'
@@ -76,17 +89,21 @@ export type ButtonEventTypeName =
     | 'call_back'
     | 'call_forward'
     | 'load'
-    | 'select'
-    | 'master_value'
+    | 'load_select'
     | 'master_cue'
     | 'beatfx_back'
-    | 'beatfx_foward'
+    | 'beatfx_forward'
     | 'beatfx_select'
-    | 'beatfx_channel'
-    | 'beatfx_level'
+    | 'beatfx_channel_1'
+    | 'beatfx_channel_2'
+    | 'beatfx_channel_master'
     | 'beatfx_toggle'
     | 'beatsync'
-    | 'beatsync_long';
+    | 'beatsync_long'
+    | 'hot_cue'
+    | 'beat_loop'
+    | 'beat_jump'
+    | 'sampler';
 
 export declare class DDJ extends EventEmitter {
     constructor(name: string, options: DDJOptions);

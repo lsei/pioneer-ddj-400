@@ -30,9 +30,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DDJ = void 0;
 var easymidi_1 = __importDefault(require("easymidi"));
 var events_1 = require("events");
-var _a = require('./midimap.js'), left = _a.left, HI_RES_CONTROLS = _a.HI_RES_CONTROLS, JOGDIALS = _a.JOGDIALS;
+var _a = require('./midimap.js'), left = _a.left, JOGDIALS = _a.JOGDIALS;
 var index_1 = require("./midimap/index");
-console.log(index_1.BUTTON_MAP);
 var DDJ = /** @class */ (function (_super) {
     __extends(DDJ, _super);
     function DDJ(name, options) {
@@ -65,6 +64,18 @@ var DDJ = /** @class */ (function (_super) {
                 rightfilter: new HighResValue(63, 0),
                 lefttempo: new HighResValue(63, 0),
                 righttempo: new HighResValue(63, 0),
+                lefttrim: new HighResValue(63, 0),
+                righttrim: new HighResValue(63, 0),
+                lefteq_high: new HighResValue(63, 0),
+                lefteq_mid: new HighResValue(63, 0),
+                lefteq_low: new HighResValue(63, 0),
+                righteq_high: new HighResValue(63, 0),
+                righteq_mid: new HighResValue(63, 0),
+                righteq_low: new HighResValue(63, 0),
+                leftlevel: new HighResValue(63, 0),
+                rightlevel: new HighResValue(63, 0),
+                beatfx_level: new HighResValue(63, 0),
+                master_level: new HighResValue(63, 0),
             },
         };
         return _this;
@@ -100,14 +111,16 @@ var DDJ = /** @class */ (function (_super) {
         this.input.on('cc', function (msg) {
             var key = msg.channel + "_" + msg.controller;
             lastCC[key] = msg.value;
-            var control = HI_RES_CONTROLS[key];
+            var control = index_1.KNOB_MAP[key];
             if (control) {
                 var majorValue = lastCC[control.major];
                 var controlKey = "" + (control.side || '') + control.type;
-                if (!_this.state.controls[controlKey]) {
-                    console.log("Key '" + controlKey + "' not found in 'this.state.controls'");
+                if (_this.state.controls[controlKey]) {
+                    _this.state.controls[controlKey].set(majorValue, msg.value);
                 }
-                _this.state.controls[controlKey].set(majorValue, msg.value);
+                else {
+                    _this.state.controls[controlKey] = new HighResValue(majorValue, msg.value);
+                }
                 // TODO: if this.options.normaliseValues == false
                 var normalisedValue = (majorValue + msg.value / 127) / 128;
                 var data = {

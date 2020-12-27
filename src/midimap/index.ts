@@ -1,7 +1,15 @@
-import { BUTTON_MAP_LEFT } from './left';
-import { BUTTON_MAP_RIGHT } from './right';
+import { BUTTONS_GLOBAL, KNOBS_GLOBAL } from './globals';
+import { BUTTONS_LEFT, KNOBS_LEFT } from './left';
+import { BUTTONS_RIGHT, KNOBS_RIGHT } from './right';
 
 export const BUTTON_MAP = {
-    ...BUTTON_MAP_LEFT,
-    ...BUTTON_MAP_RIGHT,
+    ...BUTTONS_LEFT,
+    ...BUTTONS_RIGHT,
+    ...BUTTONS_GLOBAL,
+};
+
+export const KNOB_MAP = {
+    ...KNOBS_LEFT,
+    ...KNOBS_RIGHT,
+    ...KNOBS_GLOBAL,
 };
