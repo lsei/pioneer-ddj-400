@@ -2,12 +2,12 @@ import easymidi from 'easymidi';
 import { EventEmitter } from 'events';
 
 const { left } = require('./midimap.js');
-
 import { BUTTON_MAP, JOGDIAL_MAP, KNOB_MAP } from './midimap/index';
 
 import { ButtonEvent, DDJOptions, EncoderEvent, JogdialEvent, PadEvent } from '..';
+import { HighResValue } from './highresvalue';
 
-export class DDJ extends EventEmitter {
+class DDJ extends EventEmitter {
     input: easymidi.Input;
     output: easymidi.Output;
     options: DDJOptions;
@@ -163,28 +163,4 @@ export class DDJ extends EventEmitter {
     }
 }
 
-class HighResValue {
-    major: number;
-    minor: number;
-
-    constructor(major: number, minor: number) {
-        this.major = major;
-        this.minor = minor;
-    }
-
-    toFloat() {
-        return this.major + this.minor / 127;
-    }
-
-    toString() {
-        return (this.major + this.minor / 127).toString();
-    }
-
-    set(major: number, minor: number) {
-        this.major = major;
-        this.minor = minor;
-    }
-}
-
-const clamp = (a: number, min = 0, max = 1) => Math.min(max, Math.max(min, a));
-const invlerp = (x: number, y: number, a: number) => clamp((a - x) / (y - x));
+module.exports = { DDJ };

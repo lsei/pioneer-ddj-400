@@ -27,11 +27,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DDJ = void 0;
 var easymidi_1 = __importDefault(require("easymidi"));
 var events_1 = require("events");
 var left = require('./midimap.js').left;
 var index_1 = require("./midimap/index");
+var highresvalue_1 = require("./highresvalue");
 var DDJ = /** @class */ (function (_super) {
     __extends(DDJ, _super);
     function DDJ(name, options) {
@@ -98,7 +98,7 @@ var DDJ = /** @class */ (function (_super) {
                     _this.state.controls[controlKey].set(majorValue, msg.value);
                 }
                 else {
-                    _this.state.controls[controlKey] = new HighResValue(majorValue, msg.value);
+                    _this.state.controls[controlKey] = new highresvalue_1.HighResValue(majorValue, msg.value);
                 }
                 // TODO: if this.options.normaliseValues == false
                 var normalisedValue = (majorValue + msg.value / 127) / 128;
@@ -163,27 +163,4 @@ var DDJ = /** @class */ (function (_super) {
     };
     return DDJ;
 }(events_1.EventEmitter));
-exports.DDJ = DDJ;
-var HighResValue = /** @class */ (function () {
-    function HighResValue(major, minor) {
-        this.major = major;
-        this.minor = minor;
-    }
-    HighResValue.prototype.toFloat = function () {
-        return this.major + this.minor / 127;
-    };
-    HighResValue.prototype.toString = function () {
-        return (this.major + this.minor / 127).toString();
-    };
-    HighResValue.prototype.set = function (major, minor) {
-        this.major = major;
-        this.minor = minor;
-    };
-    return HighResValue;
-}());
-var clamp = function (a, min, max) {
-    if (min === void 0) { min = 0; }
-    if (max === void 0) { max = 1; }
-    return Math.min(max, Math.max(min, a));
-};
-var invlerp = function (x, y, a) { return clamp((a - x) / (y - x)); };
+module.exports = { DDJ: DDJ };

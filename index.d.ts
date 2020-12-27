@@ -81,7 +81,6 @@ export type JogdialPosition = 'platter' | 'side';
 
 export interface JogdialEvent {
     position: JogdialPosition;
-    shift: boolean;
     side: Side;
     value: number;
     vinyl_mode: boolean;
@@ -108,5 +107,3 @@ export declare class DDJ extends EventEmitter {
 export declare var DDJ: {
     constructor(name: string, options: DDJOptions): DDJ;
 };
-
-export default DDJ;

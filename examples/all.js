@@ -1,4 +1,3 @@
-// import pioneerddj from '../index';
 const pioneerddj = require('../index');
 
 const ddj = new pioneerddj.DDJ('DDJ-400');

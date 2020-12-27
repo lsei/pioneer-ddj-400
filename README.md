@@ -1,6 +1,6 @@
 # Pioneer DDJ 400
 
-This library provides a light wrapper around the midi interface for the Pioneer DDJ 400. The goal is to provide a tool that can help create digital experiences using the DDJ 400 hardware. I've been using it with Electron but I imagine it could be used in the browser or on a Raspberry Pi.
+This library provides a light wrapper around the midi interface for the Pioneer DDJ 400. The goal is to provide a tool that can help create digital experiences using the DDJ 400 hardware. I've been using it with Electron but it could also work on a Raspberry Pi. There's still more work to be done for this to work in the browser.
 
 ## Installation
 
@@ -29,7 +29,7 @@ ddj.setPadLeft(1, 1, true);
 
 ## Event API
 
-Example from [all.js](examples/all.js).
+Example from [examples/all.js](examples/all.js).
 
 ```js
 const pioneerddj = require('pioneer-ddj');
