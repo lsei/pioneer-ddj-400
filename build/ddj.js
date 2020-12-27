@@ -142,6 +142,13 @@ var DDJ = /** @class */ (function (_super) {
                 };
                 _this.emit(wheel.type, data);
             }
+            // Load Selector
+            if (key === '6_64') {
+                _this.emit('load_selector', {
+                    type: 'load_selector',
+                    value: msg.value === 1 ? 1 : -1,
+                });
+            }
         });
     };
     DDJ.prototype.setPlayLeft = function (on) {

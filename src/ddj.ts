@@ -5,7 +5,7 @@ const { left, JOGDIALS } = require('./midimap.js');
 
 import { BUTTON_MAP, KNOB_MAP } from './midimap/index';
 
-import { ButtonEvent, ButtonEventTypeName, DDJOptions, EncoderEvent, JogdialEvent, PadEvent, Side } from '..';
+import { ButtonEvent, DDJOptions, EncoderEvent, JogdialEvent, PadEvent } from '..';
 
 export class DDJ extends EventEmitter {
     input: easymidi.Input;
@@ -134,6 +134,14 @@ export class DDJ extends EventEmitter {
                     value: msg.value - 64, // "normalised to +/-3 from 0"
                 };
                 this.emit(wheel.type, data);
+            }
+
+            // Load Selector
+            if (key === '6_64') {
+                this.emit('load_selector', {
+                    type: 'load_selector',
+                    value: msg.value === 1 ? 1 : -1,
+                });
             }
         });
     }
