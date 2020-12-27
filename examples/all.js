@@ -3,7 +3,7 @@ const pioneerddj = require('../index');
 
 const ddj = new pioneerddj.DDJ('DDJ-400');
 
-// Channel Buttons
+// Buttons
 ddj.on('play', console.log);
 ddj.on('cue', console.log);
 ddj.on('shift', console.log);
@@ -21,8 +21,9 @@ ddj.on('hot_cue', console.log);
 ddj.on('beat_loop', console.log);
 ddj.on('beat_jump', console.log);
 ddj.on('sampler', console.log);
-
 ddj.on('load', console.log);
+
+// Global Buttons
 ddj.on('load_select', console.log);
 ddj.on('master_cue', console.log);
 ddj.on('beatfx_back', console.log);
@@ -42,15 +43,17 @@ ddj.on('level', console.log);
 ddj.on('crossfader', console.log);
 
 // Knobs
-ddj.on('master_level', console.log);
-ddj.on('phones_mixing', console.log);
-ddj.on('phones_level', console.log);
 ddj.on('trim', console.log);
 ddj.on('eq_high', console.log);
 ddj.on('eq_mid', console.log);
 ddj.on('eq_low', console.log);
-ddj.on('beatfx_level', console.log);
 ddj.on('filter', console.log);
+
+// Global Knobs
+ddj.on('master_level', console.log);
+ddj.on('phones_mixing', console.log);
+ddj.on('phones_level', console.log);
+ddj.on('beatfx_level', console.log);
 ddj.on('load_selector', console.log);
 
 // Jogdials
