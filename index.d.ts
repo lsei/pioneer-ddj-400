@@ -1,10 +1,7 @@
 import easymidi from 'easymidi';
 import { EventEmitter } from 'events';
 
-export type PadMode = 'HOT_CUE' | 'BEAT_LOOP' | 'BEAT_JUMP' | 'SAMPLER';
-
 export type Side = 'left' | 'right';
-
 export type ValueSyncTime = 'post_listener_setup';
 
 export interface DDJOptions {
@@ -17,6 +14,7 @@ export interface DDJOptions {
     midiOutput?: easymidi.Output;
 }
 
+export type PadMode = 'HOT_CUE' | 'BEAT_LOOP' | 'BEAT_JUMP' | 'SAMPLER';
 export interface PadEvent {
     row: number;
     col: number;
@@ -25,60 +23,7 @@ export interface PadEvent {
     value: boolean;
 }
 
-export type ButtonType = 'PLAY' | 'CUE';
-
-export interface ButtonEvent {
-    type: ButtonType;
-    side: Side;
-    state: boolean;
-}
-
-export enum EncoderType {
-    Crossfader,
-    ChannelFader,
-    Volume,
-    Tempo,
-    Filter,
-    Trim,
-    EqHigh,
-    EqMid,
-    EqLow,
-    MasterLevel,
-    HeadphonesMixing,
-    HeadphonesLevel,
-}
-
-export interface EncoderEvent {
-    type: EncoderType;
-    side: Side;
-    value: number;
-}
-
-export type JogdialPosition = 'platter' | 'side';
-
-export interface JogdialEvent {
-    position: JogdialPosition;
-    shift: boolean;
-    side: Side;
-    value: number;
-    vinyl_mode: boolean;
-}
-
-export type EncoderEventTypeName =
-    | 'level'
-    | 'master_level'
-    | 'phones_mixing'
-    | 'phones_level'
-    | 'tempo'
-    | 'filter'
-    | 'crossfader'
-    | 'trim'
-    | 'eq_high'
-    | 'eq_mid'
-    | 'eq_low'
-    | 'beatfx_level';
-
-export type ButtonEventTypeName =
+export type ButtonType =
     | 'play'
     | 'cue'
     | 'phones_cue'
@@ -105,14 +50,49 @@ export type ButtonEventTypeName =
     | 'beat_jump'
     | 'sampler';
 
+export interface ButtonEvent {
+    type: ButtonType;
+    side: Side;
+    state: boolean;
+}
+
+export type EncoderType =
+    | 'level'
+    | 'master_level'
+    | 'phones_mixing'
+    | 'phones_level'
+    | 'tempo'
+    | 'filter'
+    | 'crossfader'
+    | 'trim'
+    | 'eq_high'
+    | 'eq_mid'
+    | 'eq_low'
+    | 'beatfx_level';
+export interface EncoderEvent {
+    type: EncoderType;
+    side: Side;
+    value: number;
+}
+
+export type JogdialPosition = 'platter' | 'side';
+
+export interface JogdialEvent {
+    position: JogdialPosition;
+    shift: boolean;
+    side: Side;
+    value: number;
+    vinyl_mode: boolean;
+}
+
 export declare class DDJ extends EventEmitter {
     constructor(name: string, options: DDJOptions);
     options: DDJOptions;
 
     on(event: 'pad', handler: (param: PadEvent) => void): this;
-    on(event: EncoderEventTypeName, handler: (param: EncoderEvent) => void): this;
+    on(event: EncoderType, handler: (param: EncoderEvent) => void): this;
     on(event: 'jogdial', handler: (param: JogdialEvent) => void): this;
-    on(event: ButtonEventTypeName, handler: (param: ButtonEvent) => void): this;
+    on(event: ButtonType, handler: (param: ButtonEvent) => void): this;
 
     setPlayLeft(state: boolean): void;
     setCueLeft(state: boolean): void;

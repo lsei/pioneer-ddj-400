@@ -33,13 +33,13 @@ ddj.setPadLeft(1, 1, true);
 
 # Open TODOs
 
+-   [] Fix the way the package is exported in index.js
+-   [] Setting of values (get buttom colours)
+-   [] Support Web midi for browser support
 -   [] Make sure all functions are available on the left and the right side
--   [] Strealine setting of values
 -   [] Store board state in class to get the current value
--   [] Move to src
--   [] output to dist
--   [] browser version
--   [] More gracefully handle if board is not connected
+-   [] Query functions for current board values
+-   [] Clean typescript definition
 
 ## Shout outs
 
