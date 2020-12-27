@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Knobs = exports.Buttons = exports.PadModes = exports.CHANNEL_RIGHT_PADS = exports.CHANNEL_RIGHT_MAIN = exports.CHANNEL_LEFT_PADS = exports.CHANNEL_LEFT_MAIN = void 0;
+exports.Jogdials = exports.Knobs = exports.Buttons = exports.PadModes = exports.CHANNEL_RIGHT_PADS = exports.CHANNEL_RIGHT_MAIN = exports.CHANNEL_LEFT_PADS = exports.CHANNEL_LEFT_MAIN = void 0;
 exports.CHANNEL_LEFT_MAIN = 0;
 exports.CHANNEL_LEFT_PADS = 7;
 exports.CHANNEL_RIGHT_MAIN = 1;
@@ -123,5 +123,24 @@ exports.Knobs = [
         type: 'tempo',
         majorNote: 0,
         minorNote: 32,
+    },
+];
+exports.Jogdials = [
+    {
+        type: 'jogdial',
+        vinyl_mode: 'on',
+        position: 'platter',
+        controller: 34,
+    },
+    {
+        type: 'jogdial',
+        vinyl_mode: 'off',
+        position: 'platter',
+        controller: 35,
+    },
+    {
+        type: 'jogdial',
+        position: 'wheel',
+        controller: 33,
     },
 ];

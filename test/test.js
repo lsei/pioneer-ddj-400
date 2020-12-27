@@ -165,3 +165,31 @@ describe('crossfader', () => {
         });
     });
 });
+
+describe('load selector', () => {
+    it('goes up', (done) => {
+        ddj.on('load_selector', ({ value }) => {
+            expect(value).to.equal(1);
+            done();
+        });
+
+        output.send('cc', {
+            channel: 6,
+            controller: 64,
+            value: 1,
+        });
+    });
+
+    it('goes down', (done) => {
+        ddj.on('load_selector', ({ value }) => {
+            expect(value).to.equal(-1);
+            done();
+        });
+
+        output.send('cc', {
+            channel: 6,
+            controller: 64,
+            value: 127,
+        });
+    });
+});

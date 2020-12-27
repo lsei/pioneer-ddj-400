@@ -68,7 +68,9 @@ export type EncoderType =
     | 'eq_high'
     | 'eq_mid'
     | 'eq_low'
-    | 'beatfx_level';
+    | 'beatfx_level'
+    | 'jogdial';
+
 export interface EncoderEvent {
     type: EncoderType;
     side: Side;

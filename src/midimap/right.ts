@@ -1,9 +1,10 @@
-import { CHANNEL_RIGHT_PADS, PadModes, Buttons, CHANNEL_RIGHT_MAIN, Knobs } from './constants';
+import { CHANNEL_RIGHT_PADS, PadModes, Buttons, CHANNEL_RIGHT_MAIN, Knobs, Jogdials } from './constants';
 
 const SIDE = 'right';
 
 export const BUTTONS_RIGHT: { [key: string]: any } = {};
 export const KNOBS_RIGHT: { [key: string]: any } = {};
+export const JOGDIAL_RIGHT: { [key: string]: any } = {};
 
 Buttons.forEach((b) => {
     const key = `${CHANNEL_RIGHT_MAIN}_${b.note}`;
@@ -32,6 +33,14 @@ Knobs.forEach((k) => {
         type: k.type,
         major: `${CHANNEL_RIGHT_MAIN}_${k.majorNote}`,
         minor: `${CHANNEL_RIGHT_MAIN}_${k.minorNote}`,
+        side: SIDE,
+    };
+});
+
+Jogdials.forEach(({ controller, ...j }) => {
+    const key = `${CHANNEL_RIGHT_MAIN}_${controller}`;
+    JOGDIAL_RIGHT[key] = {
+        ...j,
         side: SIDE,
     };
 });

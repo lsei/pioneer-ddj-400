@@ -126,3 +126,23 @@ export const Knobs = [
         minorNote: 32,
     },
 ];
+
+export const Jogdials = [
+    {
+        type: 'jogdial',
+        vinyl_mode: 'on',
+        position: 'platter',
+        controller: 34,
+    },
+    {
+        type: 'jogdial',
+        vinyl_mode: 'off',
+        position: 'platter',
+        controller: 35,
+    },
+    {
+        type: 'jogdial',
+        position: 'wheel',
+        controller: 33,
+    },
+];

@@ -11,9 +11,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.KNOB_MAP = exports.BUTTON_MAP = void 0;
+exports.JOGDIAL_MAP = exports.KNOB_MAP = exports.BUTTON_MAP = void 0;
 var globals_1 = require("./globals");
 var left_1 = require("./left");
 var right_1 = require("./right");
 exports.BUTTON_MAP = __assign(__assign(__assign({}, left_1.BUTTONS_LEFT), right_1.BUTTONS_RIGHT), globals_1.BUTTONS_GLOBAL);
 exports.KNOB_MAP = __assign(__assign(__assign({}, left_1.KNOBS_LEFT), right_1.KNOBS_RIGHT), globals_1.KNOBS_GLOBAL);
+exports.JOGDIAL_MAP = __assign(__assign({}, left_1.JOGDIAL_LEFT), right_1.JOGDIAL_RIGHT);

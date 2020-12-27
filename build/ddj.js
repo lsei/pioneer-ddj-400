@@ -30,7 +30,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DDJ = void 0;
 var easymidi_1 = __importDefault(require("easymidi"));
 var events_1 = require("events");
-var _a = require('./midimap.js'), left = _a.left, JOGDIALS = _a.JOGDIALS;
+var left = require('./midimap.js').left;
 var index_1 = require("./midimap/index");
 var DDJ = /** @class */ (function (_super) {
     __extends(DDJ, _super);
@@ -48,7 +48,6 @@ var DDJ = /** @class */ (function (_super) {
         _this.options = __assign(__assign({}, _this.defaultOptions), options);
         _this.input = options.midiInput || new easymidi_1.default.Input(name);
         _this.output = options.midiOutput || new easymidi_1.default.Output(name);
-        // this.output = options.midiOutput || new easymidi.Output(name);
         _this.startListening();
         if (_this.options.syncValuesFromController == 'post-listener-setup') {
             setTimeout(function () { return _this._triggerSyncValues(); }, 100);
@@ -56,27 +55,7 @@ var DDJ = /** @class */ (function (_super) {
         _this.state = {
             padMode: _this.options.intialPadMode,
             leftPlaying: false,
-            controls: {
-                crossfader: new HighResValue(63, 0),
-                leftvolume: new HighResValue(63, 0),
-                rightvolume: new HighResValue(63, 0),
-                leftfilter: new HighResValue(63, 0),
-                rightfilter: new HighResValue(63, 0),
-                lefttempo: new HighResValue(63, 0),
-                righttempo: new HighResValue(63, 0),
-                lefttrim: new HighResValue(63, 0),
-                righttrim: new HighResValue(63, 0),
-                lefteq_high: new HighResValue(63, 0),
-                lefteq_mid: new HighResValue(63, 0),
-                lefteq_low: new HighResValue(63, 0),
-                righteq_high: new HighResValue(63, 0),
-                righteq_mid: new HighResValue(63, 0),
-                righteq_low: new HighResValue(63, 0),
-                leftlevel: new HighResValue(63, 0),
-                rightlevel: new HighResValue(63, 0),
-                beatfx_level: new HighResValue(63, 0),
-                master_level: new HighResValue(63, 0),
-            },
+            controls: {},
         };
         return _this;
     }
@@ -130,16 +109,11 @@ var DDJ = /** @class */ (function (_super) {
                 };
                 _this.emit(control.type, data);
             }
-            var wheel = JOGDIALS[key];
+            var wheel = index_1.JOGDIAL_MAP[key];
             if (wheel) {
-                var data = {
-                    position: wheel.position,
-                    shift: wheel.shift,
-                    side: wheel.side,
-                    vinyl_mode: wheel.vinyl_mode,
+                var data = __assign(__assign({}, wheel), { 
                     // TODO: if this.options.normaliseValues == false
-                    value: msg.value - 64,
-                };
+                    value: msg.value - 64 });
                 _this.emit(wheel.type, data);
             }
             // Load Selector

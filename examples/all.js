@@ -52,3 +52,6 @@ ddj.on('eq_low', console.log);
 ddj.on('beatfx_level', console.log);
 ddj.on('filter', console.log);
 ddj.on('load_selector', console.log);
+
+// Jogdials
+ddj.on('jogdial', console.log);
