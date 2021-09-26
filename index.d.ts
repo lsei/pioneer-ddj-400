@@ -104,6 +104,6 @@ export declare class DDJ extends EventEmitter {
     close(): void;
 }
 
-export declare var DDJ: {
-    constructor(name: string, options: DDJOptions): DDJ;
-};
+// export declare var DDJ: {
+//     constructor(name: string, options: DDJOptions): DDJ;
+// };
